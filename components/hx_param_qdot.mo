@@ -1,0 +1,40 @@
+within n5GDHC.components;
+
+model hx_param_qdot
+  // States and initials
+  parameter Modelica.Units.NonSI.Temperature_degC T_init = 10.0 "Initial temperature";
+  Modelica.Units.NonSI.Temperature_degC T_B(start = T_init, fixed = true) "Temperatures side B";
+  // Material properties
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_B = 3.8e3 "Specific heat capacity medium side B";
+  parameter Modelica.Units.SI.Density rho_B = 1.0e3 "Density medium side B";
+  // Geometrical propteries
+  parameter Modelica.Units.SI.Volume V = 0.005 "Volume per side";
+  // Calculated variables
+  Modelica.Units.SI.Mass m_B "Mass medium side B";
+  // Monitoring
+  Modelica.Units.SI.HeatFlowRate Qdot_hx;
+  Modelica.Units.SI.Heat Q_hx_inp(start = 0, fixed = true);
+  Modelica.Units.SI.Heat Q_hx(start = 0, fixed = true);
+  connectors.fluid_p inlet_B annotation(
+        Placement(transformation(extent = {{20, 30}, {40, 50}}), iconTransformation(extent = {{-40, -50}, {-20, -30}})));
+  connectors.fluid_p outlet_B annotation(
+        Placement(transformation(extent = {{30, 30}, {50, 50}}), iconTransformation(extent = {{20, -50}, {40, -30}})));
+  Modelica.Blocks.Interfaces.RealInput Qdot_ext annotation(
+    Placement(visible = true, transformation(origin = {-20, 24}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-3, 37}, extent = {{-13, -13}, {13, 13}}, rotation = -90)));
+equation
+  assert(inlet_B.mdot >= (-1e-5), "HX IB negative massflow", level = AssertionLevel.error);
+  m_B = V * rho_B;
+  m_B * c_B * der(T_B) = inlet_B.mdot * c_B * (inlet_B.T - T_B) + Qdot_ext;
+  outlet_B.mdot = inlet_B.mdot;
+  outlet_B.T = T_B;
+// Monitoring
+  Qdot_hx = inlet_B.mdot * c_B * (outlet_B.T - inlet_B.T);
+  der(Q_hx_inp) = Qdot_ext;
+  der(Q_hx) = Qdot_hx;
+// pressure
+  inlet_B.p = outlet_B.p;
+  annotation(
+        Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-80, -60}, {80, 60}})),
+    Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-80, -60}, {80, 60}}), graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, lineThickness = 0.5, extent = {{-60, 40}, {60, -40}}), Line(points = {{-60, 40}, {60, -40}}, thickness = 0.5), Text( extent = {{26, 12}, {58, -10}}, textString = "A"), Text( extent = {{-60, 12}, {-28, -10}}, textString = "B")}),
+    experiment(StartTime = 0, StopTime = 1, Tolerance = 1e-6, Interval = 0.002));
+end hx_param_qdot;

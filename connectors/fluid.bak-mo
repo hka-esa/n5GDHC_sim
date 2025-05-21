@@ -1,0 +1,9 @@
+within n5GDHC.connectors;
+
+connector fluid
+  Modelica.Units.NonSI.Temperature_degC T;
+  Modelica.Units.SI.MassFlowRate mdot;
+  annotation(
+    Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {28, 108, 200}, fillColor = {28, 108, 200}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}})}),
+    Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}})));
+end fluid;
