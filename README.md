@@ -12,5 +12,4 @@ The simulation of the model was tested with OpenModelica 1.25.0 and Modelica Sta
 
 If you use this repository in your work, please cite the following publication:
 
-> Kollmar, M., Bürger, A., Bohlayer, M., Altmann-Dieses, A., Braun, M., Diehl, M. *A detailed simulation model for fifth generation district heating and cooling networks with seasonal latent storage evaluated on field data*. Preprint. DOI: [10.xxxx/xxxxx](https://doi.org/10.xxxx/xxxxx)
-
+> Kollmar, M., Bürger, A., Bohlayer, M., Altmann-Dieses, A., Braun, M., Diehl, M. *A detailed simulation model for fifth generation district heating and cooling networks with seasonal latent storage evaluated on field data*. Preprint. DOI: [10.48550/arXiv.2506.18528](https://doi.org/10.48550/arXiv.2506.18528)
