@@ -37,6 +37,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.components;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+[2] Dehner, U.: Boden und Energiewende, Springer Fachmedien Wiesbaden, 2015.
+[3] Deutscher Wetterdienst, Open Data, https://opendata.dwd.de/, 2024.
+*/
+
 model hn_tubes
   // Additional type definitions
   type HeatOfFusion = Real(final quantity = "Heat of fusion", final unit = "J/kg");
@@ -48,8 +56,8 @@ model hn_tubes
   parameter Modelica.Units.NonSI.Temperature_degC T_f_init = 10.0 "Initial temperature of fluid";
   parameter Modelica.Units.NonSI.Temperature_degC T_t_init = T_f_init "Initial temperature of tube";
   parameter Modelica.Units.NonSI.Temperature_degC T_s_0 = 13.5 "Initial soil temperature at that time at nearest DWD station";
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Minimum temperature of model soil boundary throughout a year";
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Maximum temperature of model soil boundary throughout a year";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Minimum temperature of model soil boundary throughout a year [3]";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Maximum temperature of model soil boundary throughout a year [3]";
   parameter Modelica.Units.NonSI.Temperature_degC T_s_init[N_s] = linspace(T_s_0, T_s_bd_min + ((-0.5*cos(2*Modelica.Constants.pi*(t0/3600.0 - T_s_bd_shift)/8760.0)) + 0.5)*(T_s_bd_max - T_s_bd_min), N_s) "Initial temperature of soil";
   parameter Real T_s_bd_shift = 900.0 "Value to shift T_s_bd according to DWD measurements";
   Modelica.Units.NonSI.Temperature_degC T_f_sup(start = T_f_init, fixed = true) "Temperature of fluid supply line";
@@ -63,30 +71,30 @@ model hn_tubes
   parameter Modelica.Units.SI.Time t0 = 0.0 "Time of the year (in seconds) at which the simulation starts (required for soil temperature boundary condition)";
   // Material properties
   parameter Real ratio_s_w = 0.10 "Relative water content of soil";
-  parameter HeatOfFusion dH_w = 333.55e3 "Heat of fusion water";
-  parameter Modelica.Units.SI.Density rho_f = 1.0e3 "Density fluid";
+  parameter HeatOfFusion dH_w = 333.55e3 "Heat of fusion water [1]";
+  parameter Modelica.Units.SI.Density rho_f = 1.0e3 "Density fluid [1]";
   parameter Modelica.Units.SI.Density rho_t = 0.96e3 "Density tube material (polyethylen)";
-  parameter Modelica.Units.SI.Density rho_s = 2.0e3 "Density soil";
+  parameter Modelica.Units.SI.Density rho_s = 2.0e3 "Density soil [1]";
   parameter Modelica.Units.SI.SpecificHeatCapacity c_f = 3.8e3 "Specific heat capactiy fluid";
   parameter Modelica.Units.SI.SpecificHeatCapacity c_t = 1.9e3 "Specific heat capactiy tube";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_s_d = 0.8e3 "Specific heat capacity soil, dry";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_w = 4.18e3 "Specific heat capactiy water";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_ice = 2.06e3 "Specific heat capacity ice";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_s_d = 0.8e3 "Specific heat capacity soil, dry [2]";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_w = 4.18e3 "Specific heat capactiy water [1]";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_ice = 2.06e3 "Specific heat capacity ice [2]";
   parameter VolumeHeatCapacity c_s_f = rho_s*((1 - ratio_s_w)*c_s_d + c_w*ratio_s_w) "Specific heat capacity (volume) soil, fluid";
   parameter VolumeHeatCapacity c_s_m = c_s_f + rho_s*(ratio_s_w*dH_w) "Specific heat capactiy (volume) soil, water mixed";
   parameter VolumeHeatCapacity c_s_s = rho_s*((1 - ratio_s_w)*c_s_d + c_ice*ratio_s_w) "Specific heat capacity (volume) soil, solid (iced)";
   parameter Modelica.Units.NonSI.Temperature_degC T_w_fluid = 0.0 "Lower temperature bound water liquid";
   parameter Modelica.Units.NonSI.Temperature_degC T_w_solid = -1.0 "Upper temperature bound water solid";
-  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_t = 2.5e3 "Heat transfer coeff. tube";
+  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_t = 2.5e3 "Heat transfer coeff. tube [1]";
   parameter Modelica.Units.SI.ThermalConductivity lambda_t = 0.41 "Therm. conductivity tube";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.0 "Therm. conductivity soil";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_s_i = 2.18 "Therm. conductivity ice";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.0 "Therm. conductivity soil [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_s_i = 2.18 "Therm. conductivity ice [2]";
   // Geometrical propteries
   parameter Modelica.Units.SI.Radius r_t = 0.07 "Inner radius of network tube";
   parameter Modelica.Units.SI.Thickness t_t = 0.005 "Thickness of the tube";
   parameter Modelica.Units.SI.Thickness t_s = 1.0 "Thickness of surrounding soil";
   parameter Modelica.Units.SI.Length l = 1.0 "Length of the tube";
-  parameter Modelica.Units.SI.Length d_t = 0.5 "Distance between supply and return tube (Info Hr. Wickenheißer)";
+  parameter Modelica.Units.SI.Length d_t = 0.5 "Distance between supply and return tube";
   parameter Modelica.Units.SI.Radius r_b = d_t/2 "Treshold for soil layers";
   Modelica.Units.SI.Length d_sr_exch "Distance of considered return and supply exchange are";
   parameter Modelica.Units.SI.Length d_12_exch = 0.1 "Distance of exchange area between part 1 and 2 of supply and return side";

@@ -37,6 +37,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.systems;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+[2] Dehner, U.: Boden und Energiewende, Springer Fachmedien Wiesbaden, 2015.
+*/
+
 model n5GDHC
   // Parameters
   parameter Integer N = 6 "Number of households";
@@ -56,7 +63,7 @@ model n5GDHC
   parameter Modelica.Units.SI.Radius r_h = 0.02 "Radius connection tube";
   parameter Modelica.Units.SI.Radius t_t_h = 0.004 "Thickness tube";
   parameter Modelica.Units.SI.Volume V_w = 200.0 "Water volume of the storage";
-  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_hx_w = 250.0 "Heat transfer coefficient hx - water";
+  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_hx_w = 250.0 "Heat transfer coefficient hx - water [1]";
   parameter String path_bypass_inp = Modelica.Utilities.Files.loadResource("modelica://n5GDHC/input/Bypass.txt");
   parameter String path_PI_T_inp = Modelica.Utilities.Files.loadResource("modelica://n5GDHC/input/PI_T.txt"); 
   // Settings
@@ -69,7 +76,7 @@ model n5GDHC
   parameter Modelica.Units.NonSI.Temperature_degC T_s_0 = T_n_init "Soil layer 1 temperature";
   parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Min soil temperature";
   parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Max soil temperature";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 2.0 "Therm. conductivity soil";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.2 "Therm. conductivity soil, [1,2]";
   parameter Real ratio_s_w = 0.2 "Volumetric share of water inside soil";
   // PI-controller
   parameter Modelica.Units.NonSI.Temperature_degC T_summer = 19.5 "VL target temperature summer mode";

@@ -37,10 +37,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.components;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Grundfos TP 65-402/2 A-F-A-BQQE, https://product-selection.grundfos.com/de/products/tp-tpe/tp/tp-65-4102-96087525?pumpsystemid=2726346848&tab=variant-curves
+[2] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+*/
+
 model pump_c
-  parameter Modelica.Units.SI.Efficiency eta = 0.912 "Motor efficiency at full power";
+  parameter Modelica.Units.SI.Efficiency eta = 0.912 "Motor efficiency at full power [1]";
   parameter Modelica.Units.SI.Pressure p_ref = 3.4/1e-5 "Reference pressure for supply line";
-  parameter Modelica.Units.SI.Density rho_f = 1.0e3 "Density of network medium";
+  parameter Modelica.Units.SI.Density rho_f = 1.0e3 "Density of network medium [2]";
   Modelica.Units.SI.Pressure p_diff "Pressure increase";
   Modelica.Units.SI.Power P_el "Electric consumption of pump";
   Modelica.Units.SI.Energy E_el(start=0, fixed=true) "Energy consumed";

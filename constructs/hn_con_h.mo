@@ -37,8 +37,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.constructs;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+[2] Dehner, U.: Boden und Energiewende, Springer Fachmedien Wiesbaden, 2015.
+[3] Deutscher Wetterdienst: Open Data, https://opendata.dwd.de/, 2024.
+*/
+
 model hn_con_h
-  parameter Integer N_s = 4 "Number of sorrounding soil layers";
+  parameter Integer N_s = 5 "Number of sorrounding soil layers";
   parameter Modelica.Units.SI.Length l_n = 20.0 "Length of network tubes";
   parameter Modelica.Units.SI.Length l_h = 5.0 "Length of household tube";
   parameter Modelica.Units.SI.Radius r_n = 0.06 "Radius of network tube";
@@ -47,9 +55,9 @@ model hn_con_h
   parameter Modelica.Units.SI.Radius t_t_h = 0.005 "Thickness of household tube";
   parameter Modelica.Units.NonSI.Temperature_degC T_init = 10.0;
   parameter Modelica.Units.NonSI.Temperature_degC T_s_0 = 10.0;
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0;
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0;
-  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 0.5 "Therm. conductivity soil";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Minimum yearly soil temperature of nearest DWD weather station [3]";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Maximum yearly soil temperature of nearest DWD weather station [3]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.2 "Therm. conductivity soil [1,2]";
   parameter Modelica.Units.SI.Time t0 = 0.0;
   parameter Real ratio_s_w = 0.10;
   components.hn_split hn_split annotation(

@@ -37,13 +37,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.components;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+*/
+
 model hx_param_qdot
   // States and initials
   parameter Modelica.Units.NonSI.Temperature_degC T_init = 10.0 "Initial temperature";
   Modelica.Units.NonSI.Temperature_degC T_B(start = T_init, fixed = true) "Temperatures side B";
   // Material properties
   parameter Modelica.Units.SI.SpecificHeatCapacity c_B = 3.8e3 "Specific heat capacity medium side B";
-  parameter Modelica.Units.SI.Density rho_B = 1.0e3 "Density medium side B";
+  parameter Modelica.Units.SI.Density rho_B = 1.0e3 "Density medium side B [1]";
   // Geometrical propteries
   parameter Modelica.Units.SI.Volume V = 0.005 "Volume per side";
   // Calculated variables

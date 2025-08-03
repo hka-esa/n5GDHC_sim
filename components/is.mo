@@ -37,6 +37,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 within n5GDHC.components;
 
+/* 
+The parameter data is taken from literature, public sources or data sheets in order to reflect the specific conditions at the site.
+Sources:
+[1] Kuchling, H.: Taschenbuch der Physik, Hanser München, 22, 2022.
+[2] Dehner, U.: Boden und Energiewende, Springer Fachmedien Wiesbaden, 2015.
+[3] Herr, H.: Technische Physik: Wärmelehre, Europa-Lehrmittel, 2006.
+[4] Deutscher Wetterdienst, Open Data, https://opendata.dwd.de/, 2024.
+[5] Schweizer A.: Stoffdaten von Wasser in Abhängigkeit der Temperatur, https://schweizer-fn.de/stoff/wasser/wasser_stoff.php, 2025.
+*/
+
 model is
   // Functions and additional type definitions
   import Modelica.Units.Conversions.from_kWh;
@@ -64,33 +74,33 @@ model is
   parameter Modelica.Units.SI.Time t0 = 0.0 "Initial time of the year (in seconds) at which the simulation starts";
   parameter Modelica.Units.SI.Time t0_h = 28512000 "Start of heating period in seconds since simulation start";
   parameter Modelica.Units.SI.Time tN_h = 15292800 "End of heating period in seconds since simulation start";
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Minimum temperature of model soil boundary throughout a year";
-  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Maximum temperature of model soil boundary throughout a year";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_min = 5.0 "Minimum temperature of model soil boundary throughout a year [4]";
+  parameter Modelica.Units.NonSI.Temperature_degC T_s_bd_max = 20.0 "Maximum temperature of model soil boundary throughout a year [4]";
   // Material properties
-  parameter HeatOfFusion dH_w = 333.55e3 "Heat of fusion water";
+  parameter HeatOfFusion dH_w = 333.55e3 "Heat of fusion water [1]";
   constant Modelica.Units.NonSI.Temperature_degC T_w_l = 0.0 "Temperature above which all water is liquid";
   constant Modelica.Units.NonSI.Temperature_degC T_w_f = -1.0 "Temperature below which all water is frozen";
-  parameter Modelica.Units.SI.Density rho_w = 1.0e3 "Density water";
-  parameter Modelica.Units.SI.Density rho_hx = 1.0e3 "Density brine";
-  parameter Modelica.Units.SI.Density rho_c = 2.0e3 "Density concrete";
-  parameter Modelica.Units.SI.Density rho_s = 2.0e3 "Density soil";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_w = 4.18e3 "Specific heat capactiy water";
+  parameter Modelica.Units.SI.Density rho_w = 1.0e3 "Density water [1]";
+  parameter Modelica.Units.SI.Density rho_hx = 1.0e3 "Density brine [1]";
+  parameter Modelica.Units.SI.Density rho_c = 2.0e3 "Density concrete [1]";
+  parameter Modelica.Units.SI.Density rho_s = 2.0e3 "Density soil [1]";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_w = 4.18e3 "Specific heat capactiy water [1]";
   parameter Modelica.Units.SI.SpecificHeatCapacity c_hx = 3.8e3 "Specific heat capactiy heat exchanger medium";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_ice = 2.06e3 "Specific heat capacity ice";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_c = 0.84e3 "Specific heat capactiy concrete";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_ice = 2.06e3 "Specific heat capacity ice [1]";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_c = 0.84e3 "Specific heat capactiy concrete [1]";
   parameter Real ratio_s_w = 0.1 "Share of volumetric water in soil";
-  parameter Modelica.Units.SI.SpecificHeatCapacity c_s_d = 0.8e3 "Specific heat capactiy soil dry";
+  parameter Modelica.Units.SI.SpecificHeatCapacity c_s_d = 0.8e3 "Specific heat capactiy soil dry [1,2]";
   parameter VolumeHeatCapacity c_s_f = ((1-ratio_s_w) * c_s_d + c_w * ratio_s_w) "Volumetric heat capacity soil with fluid water";
   parameter VolumeHeatCapacity c_s_m = c_s_f + rho_s * (ratio_s_w * dH_w) "Volumetric heat capacity soil while freezing";
   parameter VolumeHeatCapacity c_s_s = rho_s * ((1-ratio_s_w) * c_s_d + c_ice * ratio_s_w) "Volumetric heat capacity soil with frozen water";
-  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_w_c = 400.0 "Heat transfer coefficient water - concrete";
-  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_b_hx = 4000.0 "Heat transfer coefficient brine - hx";
-  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_hx_w = 250.0 "Heat transfer coefficient hx - water";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_c = 2.1 "Therm. conductivity concrete";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_ice = 2.25 "Therm. conductivity ice";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_t = 0.41 "Therm. conductivity tube";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.6 "Therm. conductivity soil";
-  parameter Modelica.Units.SI.ThermalConductivity lambda_w = 0.582 "Thermal Conductivity of water at around 10°C";
+  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_w_c = 400.0 "Heat transfer coefficient water - concrete [3]";
+  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_b_hx = 4000.0 "Heat transfer coefficient brine - hx [1]";
+  parameter Modelica.Units.SI.CoefficientOfHeatTransfer alpha_hx_w = 250.0 "Heat transfer coefficient hx - water [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_c = 2.1 "Therm. conductivity concrete [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_ice = 2.25 "Therm. conductivity ice [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_t = 0.41 "Therm. conductivity tube [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_s = 1.6 "Therm. conductivity soil [1]";
+  parameter Modelica.Units.SI.ThermalConductivity lambda_w = 0.582 "Thermal Conductivity of water at around 10°C [5]";
   VolumeHeatCapacity c_s[N_w, N_s] "Volumetric heat capacity soil layers";
   // Geometrical properties
   parameter Modelica.Units.SI.Volume V_w = 543.0 "Water volume of the ice storage";
